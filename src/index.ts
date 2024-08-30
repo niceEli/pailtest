@@ -1,14 +1,23 @@
 import { $ } from "bun";
-let pkgs = await $`scoop list`.quiet();
 
+let pkgs = await $`scoop list`.quiet();
 let stdout = pkgs.stdout.toString();
 
-stdout = stdout.slice(285);
+const lines = stdout.split('\n');
 
-const rows = stdout.split('\n');
+const trimmedLines = lines.map(line => line.trim()).filter(line => line.length > 0);
+
+const headerIndex = trimmedLines.findIndex(line => line.includes('Name'));
+
+if (headerIndex === -1) {
+  console.error('Header not found in scoop list output.');
+  process.exit(1);
+}
+
+const rows = trimmedLines.slice(headerIndex + 2).filter(line => line.length > 0);
 
 const firstColumn = rows.map(row => {
-  const columns = row.split(' ');
+  const columns = row.split(/\s{2,}/);
   return columns[0];
 });
 
