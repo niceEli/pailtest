@@ -17,7 +17,7 @@ if (headerIndex === -1) {
 const rows = trimmedLines.slice(headerIndex + 2).filter(line => line.length > 0);
 
 const firstColumn = rows.map(row => {
-  const columns = row.split(/\s{2,}/);
+  const columns = row.split(/\s{1,}/);
   return columns[0];
 });
 
